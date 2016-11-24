@@ -26,6 +26,7 @@ type (
 	Parser                        C.struct_AVCodecParser
 	ParserContext                 C.struct_AVCodecParserContext
 	Dictionary                    C.struct_AVDictionary
+	DictionaryEntry               C.struct_AVDictionaryEntry
 	Frame                         C.struct_AVFrame
 	MediaType                     C.enum_AVMediaType
 	Packet                        C.struct_AVPacket
