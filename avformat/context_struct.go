@@ -38,6 +38,10 @@ func (ctxt *Context) Pb() *AvIOContext {
 	return (*AvIOContext)(unsafe.Pointer(ctxt.pb))
 }
 
+func (ctxt *Context) SetPb(pb *AvIOContext) {
+	ctxt.pb = (*C.struct_AVIOContext)(pb)
+}
+
 func (ctxt *Context) InterruptCallback() AvIOInterruptCB {
 	return AvIOInterruptCB(ctxt.interrupt_callback)
 }
