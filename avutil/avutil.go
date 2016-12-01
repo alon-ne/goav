@@ -25,6 +25,8 @@ type (
 	File          C.FILE
 )
 
+const errorStringSize = 1024
+
 //Return the LIBAvUTIL_VERSION_INT constant.
 func AvutilVersion() uint {
 	return uint(C.avutil_version())
@@ -69,4 +71,14 @@ func AvFopenUtf8(p, m string) *File {
 //Return the fractional representation of the internal time base.
 func AvGetTimeBaseQ() Rational {
 	return (Rational)(C.av_get_time_base_q())
+}
+
+func AvStrError(errnum int) string {
+	buf := C.malloc(errorStringSize)
+	defer C.free(buf)
+	if rc := C.av_strerror(C.int(errnum), (*C.char)(buf), errorStringSize); rc != 0 {
+		return "Unknown error"
+	}
+	strError := C.GoString((*C.char)(buf))
+	return strError
 }
