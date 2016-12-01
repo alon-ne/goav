@@ -3,8 +3,17 @@
 
 package avformat
 
-//#cgo pkg-config: libavformat
-//#include <libavformat/avformat.h>
+/*
+#cgo pkg-config: libavformat
+#include <libavformat/avformat.h>
+#include <stdio.h>
+static inline void PrintInputFormat(AVInputFormat* inputFormat)
+{
+	FILE* f = fopen("~/temp/if.txt", "w");
+	fprintf(f, "InputFormat: name=%s\n", inputFormat->name);
+	fclose(f);
+}
+*/
 import "C"
 import (
 	"unsafe"
@@ -106,6 +115,10 @@ func (ctxt *Context) Debug() int {
 	return int(ctxt.debug)
 }
 
+func (ctxt *Context) SetDebug(debug int) {
+	ctxt.debug = C.int(debug)
+}
+
 func (ctxt *Context) ErrorRecognition() int {
 	return int(ctxt.error_recognition)
 }
@@ -116,6 +129,10 @@ func (ctxt *Context) EventFlags() int {
 
 func (ctxt *Context) Flags() int {
 	return int(ctxt.flags)
+}
+
+func (ctxt *Context) SetFlags(flags int) {
+	ctxt.flags = C.int(flags)
 }
 
 func (ctxt *Context) FlushPackets() int {
@@ -217,6 +234,13 @@ func (ctxt *Context) StartTimeRealtime() int64 {
 
 func (ctxt *Context) Iformat() *InputFormat {
 	return (*InputFormat)(unsafe.Pointer(ctxt.iformat))
+}
+
+func (ctxt *Context) SetIformat(iformat *InputFormat) {
+	ctxt.iformat = (*C.struct_AVInputFormat)(iformat)
+	//name := C.GoString(ctxt.iformat.name)
+	//fmt.Printf("SetIformat: name=%s", name)
+	//C.PrintInputFormat(ctxt.iformat)
 }
 
 func (ctxt *Context) Oformat() *OutputFormat {
