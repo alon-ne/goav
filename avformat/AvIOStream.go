@@ -18,26 +18,30 @@ package avformat
 
 extern int readStreamPacket(void* opaque, unsigned char* buf, int bufSize);
 extern int writeStreamPacket(void* opaque, unsigned char* buf, int bufSize);
-extern long long seekStream(void* opaque, long long offset, int whence);
+extern int64_t seekStream(void* opaque, int64_t offset, int whence);
+
+static inline int readStreamPacketWrapper(void* opaque, unsigned char* buf, int bufSize)
+{
+	FILE* outFile = fopen("/home/alon/outFileCgo", "a");
+	int readBytes;
+	readBytes = readStreamPacket(opaque, buf, bufSize);
+	fwrite(buf, 1, readBytes, outFile);
+	fclose(outFile);
+	return readBytes;
+}
 
 static inline AVIOContext* avio_alloc_context_wrapper(unsigned char* buffer, int bufferSize, int writeFlag, int streamIndex)
 {
 	void* opaque = (void*)(long long)streamIndex;
 
-	//TEMP TEMP TEMP
-	FILE* f = fopen("/Users/alonne/temp/c.txt", "w");
-	int r = readStreamPacket(opaque, buffer, 3);
-	fprintf(f, "avio_alloc_context_wrapper: buf=");
-	for (int i = 0; i < 3; ++i)
-	{
-		fprintf(f, "%d ", buffer[i]);
-	}
-	fprintf(f, "\n");
-	fprintf(f, "avio_alloc_context_wrapper: returned %d\n", r);
-	fclose(f);
-	//TEMP TEMP TEMP
-
-	return avio_alloc_context(buffer, bufferSize, writeFlag, opaque, &readStreamPacket, &writeStreamPacket, seekStream);
+	return avio_alloc_context(
+		buffer,
+		bufferSize,
+		writeFlag,
+		opaque,
+		&readStreamPacketWrapper,
+		NULL, //&writeStreamPacket,
+		NULL); //&seekStream);
 }
 */
 import "C"
@@ -45,6 +49,8 @@ import (
 	"unsafe"
 	"sync"
 	"github.com/giorgisio/goav/avutil"
+	"fmt"
+	"errors"
 )
 
 const maxArraySize = 1 << 31 - 1
@@ -80,7 +86,12 @@ func unregisterAvIOStream(streamIndex int) {
 func getAvIOStreamByIndex(index int) AvIOStream {
 	avioStreamsMutex.Lock()
 	defer avioStreamsMutex.Unlock()
-	return avioStreams[index]
+	stream, ok := avioStreams[index]
+	if (!ok) {
+		fmt.Printf("Failed to find stream with index %d\n", index)
+		return nil
+	}
+	return stream
 }
 
 func getAvIOStreamByOpaque(opaque unsafe.Pointer) AvIOStream {
@@ -91,28 +102,47 @@ func getAvIOStreamByOpaque(opaque unsafe.Pointer) AvIOStream {
 //export readStreamPacket
 func readStreamPacket(opaque unsafe.Pointer, buf *C.uchar, bufSize C.int) C.int {
 	stream := getAvIOStreamByOpaque(opaque)
+	if stream == nil {
+		return -1
+	}
 	goBuf := AvIOPacket(unsafe.Pointer(buf))
-	return C.int(stream.ReadPacket(goBuf, int(bufSize)))
+	bytesRead := C.int(stream.ReadPacket(goBuf, int(bufSize)))
+	fmt.Printf("readStreamPacket: bufSize=%d, returning %d\n", int(bufSize), int(bytesRead))
+
+	return bytesRead
 }
 
 //export writeStreamPacket
 func writeStreamPacket(opaque unsafe.Pointer, buf *C.uchar, bufSize C.int) C.int {
 	stream := getAvIOStreamByOpaque(opaque)
+	if stream == nil {
+		return -1
+	}
 	goBuf := AvIOPacket(unsafe.Pointer(buf))
 	return C.int(stream.WritePacket(goBuf, int(bufSize)))
 }
 
 //export seekStream
-func seekStream(opaque unsafe.Pointer, offset C.longlong, whence C.int) C.longlong {
+func seekStream(opaque unsafe.Pointer, offset C.int64_t, whence C.int) C.int64_t {
 	stream := getAvIOStreamByOpaque(opaque)
-	return C.longlong(stream.Seek(int64(offset), int(whence)))
+	if stream == nil {
+		return -1
+	}
+	return C.int64_t(stream.Seek(int64(offset), int(whence)))
 }
 
-func AvIOAllocContext(bufferSize int, writeFlag int, stream AvIOStream) (*AvIOContext, int) {
-	buffer := (*C.uchar)(avutil.AvMalloc(uintptr(bufferSize)))
+func AvIOAllocContext(bufferSize int, writeFlag int, stream AvIOStream) (*AvIOContext, int, error) {
+	buffer := avutil.AvMalloc(uintptr(bufferSize))
+	if buffer == nil {
+		return nil,-1,errors.New("Failed to allocate buffer")
+	}
 	streamIndex := registerAvIOStream(stream)
-	context := (*AvIOContext)(C.avio_alloc_context_wrapper(buffer, C.int(bufferSize), C.int(writeFlag), C.int(streamIndex)))
-	return context, streamIndex
+	context := (*AvIOContext)(C.avio_alloc_context_wrapper((*C.uchar)(buffer), C.int(bufferSize), C.int(writeFlag), C.int(streamIndex)))
+	if context == nil {
+		unregisterAvIOStream(streamIndex)
+		return nil,-1,errors.New("Failed to allocate avio context")
+	}
+	return context, streamIndex, nil
 }
 
 func AvIODeallocateContext(context *AvIOContext, streamIndex int) {
