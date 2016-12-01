@@ -54,7 +54,18 @@ type (
 	CodecId                    C.enum_AVCodecID
 )
 
+const AVFMT_FLAG_CUSTOM_IO = 0x0080
+const FF_FDEBUG_TS = 0x0001
+
 type File C.FILE
+
+func NewAvProbeData(buf unsafe.Pointer, bufSize int, fileName string) *AvProbeData {
+	avProbeData := new(AvProbeData)
+	avProbeData.buf = (*C.uchar)(buf)
+	avProbeData.buf_size = C.int(bufSize)
+	avProbeData.filename = C.CString(fileName)
+	return avProbeData
+}
 
 //Allocate and read the payload of a packet and initialize its fields with default values.
 func (ctxt *AvIOContext) AvGetPacket(pkt *Packet, s int) int {
@@ -273,3 +284,4 @@ func AvformatGetMovVideoTags() *AvCodecTag {
 func AvformatGetMovAudioTags() *AvCodecTag {
 	return (*AvCodecTag)(C.avformat_get_mov_audio_tags())
 }
+
