@@ -57,6 +57,10 @@ const maxArraySize = 1 << 31 - 1
 
 type AvIOPacket *[maxArraySize]uint8
 
+func init() {
+	AvRegisterAll()
+}
+
 type AvIOStream interface {
 	ReadPacket(buf AvIOPacket, bufSize int) int
 	WritePacket(buf AvIOPacket, bufSize int) int

@@ -43,8 +43,6 @@ func main() {
 	avlog.AvlogSetLevel(avlog.AV_LOG_DEBUG);
 	logLevel = avlog.AvlogGetLevel()
 	fmt.Printf("Log level is %d\n", logLevel)
-	fmt.Printf("Registering all formats\n")
-	avformat.AvRegisterAll()
 
 	bufferSize := 4096
 	stream := TestStream{"TestStream"}
