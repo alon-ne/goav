@@ -66,6 +66,7 @@ func main() {
 
 	fmt.Printf("Allocating format context\n")
 	formatContext := avformat.AvformatAllocContext()
+	//TODO: Defer deallocating formatContext here
 	formatContext.SetDebug(formatContext.Debug() | avformat.FF_FDEBUG_TS)
 
 	fmt.Printf("Allocating AvIO context\n")
