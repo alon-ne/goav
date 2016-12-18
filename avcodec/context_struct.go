@@ -3,6 +3,11 @@
 
 package avcodec
 
+import (
+	"unsafe"
+	"github.com/giorgisio/goav/avutil"
+)
+
 func (ctxt *Context) ActiveThreadType() int {
 	return int(ctxt.active_thread_type)
 }
@@ -545,4 +550,8 @@ func (ctxt *Context) SkipIdct() AvDiscard {
 
 func (ctxt *Context) SkipLoopFilter() AvDiscard {
 	return (AvDiscard)(ctxt.skip_loop_filter)
+}
+
+func (ctxt *Context) TimeBase() *avutil.Rational {
+	return (*avutil.Rational)(unsafe.Pointer(&ctxt.time_base))
 }

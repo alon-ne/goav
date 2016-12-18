@@ -11,6 +11,10 @@ import (
 	"unsafe"
 )
 
+type (
+	Rational      C.struct_AVRational
+)
+
 func (s *Context) AvFormatGetProbeScore() int {
 	return int(C.av_format_get_probe_score((*C.struct_AVFormatContext)(s)))
 }

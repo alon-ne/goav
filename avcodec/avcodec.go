@@ -22,6 +22,7 @@ import (
 type (
 	Codec                         C.struct_AVCodec
 	Context                       C.struct_AVCodecContext
+	CodecParameters               C.struct_AVCodecParameters
 	Descriptor                    C.struct_AVCodecDescriptor
 	Parser                        C.struct_AVCodecParser
 	ParserContext                 C.struct_AVCodecParserContext

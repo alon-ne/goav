@@ -8,6 +8,7 @@ package avformat
 import "C"
 import (
 	"unsafe"
+	"github.com/giorgisio/goav/avcodec"
 )
 
 func (avs *Stream) Codec() *CodecContext {
@@ -224,4 +225,8 @@ func (avs *Stream) PtsReorderErrorCount() uint8 {
 
 func (avs *Stream) IndexEntriesAllocatedSize() uint {
 	return uint(avs.index_entries_allocated_size)
+}
+
+func (avs *Stream) CodecPar() *avcodec.CodecParameters {
+	return (*avcodec.CodecParameters)(unsafe.Pointer(avs.codecpar))
 }

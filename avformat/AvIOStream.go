@@ -2,7 +2,7 @@ package avformat
 
 /*
 
-//TODO: Remove unsued includes from below
+//TODO: Remove unused includes from below
 
 #cgo pkg-config: libavformat libavcodec libavutil libavdevice libavfilter libswresample libswscale
 #include <stdio.h>
