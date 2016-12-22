@@ -70,24 +70,43 @@ type AvIOStream interface {
 
 var avioStreams map[int]AvIOStream = make(map[int]AvIOStream)
 var lastStreamIndex int
+
+type dummyMutex struct {
+
+}
+
+func (*dummyMutex) Lock() {
+
+}
+
+func (*dummyMutex) Unlock() {
+
+}
+
 var avioStreamsMutex sync.Mutex
+//var avioStreamsMutex dummyMutex
 
 func registerAvIOStream(stream AvIOStream) int {
+	fmt.Printf("Entering avioStreamsMutex\n")
 	avioStreamsMutex.Lock()
 	defer avioStreamsMutex.Unlock()
 	streamIndex := lastStreamIndex
 	lastStreamIndex++
 	avioStreams[streamIndex] = stream
+	fmt.Printf("Leaving avioStreamsMutex\n")
 	return streamIndex
 }
 
 func unregisterAvIOStream(streamIndex int) {
+	fmt.Printf("Entering avioStreamsMutex\n")
 	avioStreamsMutex.Lock()
 	defer avioStreamsMutex.Unlock()
 	delete(avioStreams, streamIndex)
+	fmt.Printf("Leaving avioStreamsMutex\n")
 }
 
 func getAvIOStreamByIndex(index int) AvIOStream {
+	fmt.Printf("Entering avioStreamsMutex\n")
 	avioStreamsMutex.Lock()
 	defer avioStreamsMutex.Unlock()
 	stream, ok := avioStreams[index]
@@ -95,6 +114,7 @@ func getAvIOStreamByIndex(index int) AvIOStream {
 		fmt.Printf("Failed to find stream with index %d\n", index)
 		return nil
 	}
+	fmt.Printf("Leaving avioStreamsMutex\n")
 	return stream
 }
 
@@ -105,6 +125,7 @@ func getAvIOStreamByOpaque(opaque unsafe.Pointer) AvIOStream {
 
 //export readStreamPacket
 func readStreamPacket(opaque unsafe.Pointer, buf *C.uchar, bufSize C.int) C.int {
+
 	stream := getAvIOStreamByOpaque(opaque)
 	if stream == nil {
 		return -1
