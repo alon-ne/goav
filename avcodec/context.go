@@ -8,6 +8,7 @@ package avcodec
 import "C"
 import (
 	"unsafe"
+	"github.com/giorgisio/goav/avutil"
 )
 
 func (ctxt *Context) AvCodecGetPktTimebase() Rational {
@@ -146,6 +147,15 @@ func (ctxt *Context) AvParserChange(ctxtp *ParserContext, pb **uint8, pbs *int, 
 	return int(C.av_parser_change((*C.struct_AVCodecParserContext)(ctxtp), (*C.struct_AVCodecContext)(ctxt), (**C.uint8_t)(unsafe.Pointer(pb)), (*C.int)(unsafe.Pointer(pbs)), (*C.uint8_t)(b), C.int(bs), C.int(k)))
 }
 
+func (ctxt *Context) AvCodecSendPacket(packet *Packet) int {
+	return int(C.avcodec_send_packet((*C.struct_AVCodecContext)(ctxt), (*C.struct_AVPacket)(packet)))
+}
+
+func (ctxt *Context) AvCodecReceiveFrame(frame *avutil.Frame) int {
+	return int(C.avcodec_receive_frame((*C.struct_AVCodecContext)(ctxt), (*C.struct_AVFrame)(unsafe.Pointer(frame))))
+}
+
+
 func AvParserInit(c int) *ParserContext {
 	return (*ParserContext)(C.av_parser_init(C.int(c)))
 }
@@ -161,3 +171,4 @@ func (p *Parser) AvParserNext() *Parser {
 func (p *Parser) AvRegisterCodecParser() {
 	C.av_register_codec_parser((*C.struct_AVCodecParser)(p))
 }
+

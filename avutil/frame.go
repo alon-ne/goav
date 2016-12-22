@@ -99,9 +99,14 @@ func AvFrameGetSideData(f *Frame, t AvFrameSideDataType) *AvFrameSideData {
 	return (*AvFrameSideData)(C.av_frame_get_side_data((*C.struct_AVFrame)(unsafe.Pointer(f)), (C.enum_AVFrameSideDataType)(t)))
 }
 
+func AvFrameGetBestEffortTimestamp(f *Frame) int64 {
+	return int64(C.av_frame_get_best_effort_timestamp((*C.struct_AVFrame)(unsafe.Pointer(f))))
+}
+
 func Data(f *Frame) *uint8 {
 	return (*uint8)(unsafe.Pointer((*C.uint8_t)(unsafe.Pointer(&f.data))))
 }
+
 func Linesize(f *Frame) int {
 	return int(*(*C.int)(unsafe.Pointer(&f.linesize)))
 }
