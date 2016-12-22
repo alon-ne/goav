@@ -1,0 +1,6 @@
+/.idea/
+/avformat/.idea/
+/cmake-build-debug/
+/.DS_Store
+/CMakeLists.txt
+/example/test_avio_stream
