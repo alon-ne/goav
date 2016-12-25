@@ -125,3 +125,7 @@ func Linesize(f *Frame) int {
 // func GetFrameDefaults(f *Frame) {
 // 	C.get_frame_defaults(*C.struct_AVFrame(f))
 // }
+
+func AvFrameGetPktSize(f *Frame) int {
+	return int(C.av_frame_get_pkt_size(unsafe.Pointer(f)))
+}
