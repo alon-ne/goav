@@ -155,6 +155,13 @@ func (ctxt *Context) AvCodecReceiveFrame(frame *avutil.Frame) int {
 	return int(C.avcodec_receive_frame((*C.struct_AVCodecContext)(ctxt), (*C.struct_AVFrame)(unsafe.Pointer(frame))))
 }
 
+func (ctxt *Context) AvCodecSendFrame(frame *avutil.Frame) int {
+	return int(C.avcodec_send_frame((*C.struct_AVCodecContext)(ctxt), (*C.struct_AVFrame)(unsafe.Pointer(frame))))
+}
+
+func (ctxt *Context) AvCodecReceivePacket(packet *Packet) int {
+	return int(C.avcodec_receive_packet((*C.struct_AVCodecContext)(ctxt), (*C.struct_AVPacket)(packet)))
+}
 
 func AvParserInit(c int) *ParserContext {
 	return (*ParserContext)(C.av_parser_init(C.int(c)))

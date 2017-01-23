@@ -18,3 +18,10 @@ func (r *Rational) Den() int {
 func (r *Rational) SetDen(den int) {
 	r.den = C.int(den)
 }
+
+func NewRational(num, den int) Rational {
+	var r Rational
+	r.SetNum(num)
+	r.SetDen(den)
+	return r
+}

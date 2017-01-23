@@ -3,11 +3,16 @@
 
 package avcodec
 
-//#cgo pkg-config: libavcodec
+//#cgo pkg-config: libavcodec libavutil
 //#include <libavcodec/avcodec.h>
+//#include <libavutil/pixfmt.h>
 import "C"
 import (
 	"unsafe"
+)
+
+const (
+	AV_PIX_FMT_YUV420P = C.AV_PIX_FMT_YUV420P
 )
 
 //Utility function to access log2_chroma_w log2_chroma_h from the pixel format AvPixFmtDescriptor.

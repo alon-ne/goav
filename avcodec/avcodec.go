@@ -167,7 +167,7 @@ func AvcodecChromaPosToEnum(x, y int) AvChromaLocation {
 }
 
 //Find a registered encoder with a matching codec ID.
-func AvcodecFindEncoder(id CodecId) *Codec {
+func AvcodecFindEncoder(id int) *Codec {
 	return (*Codec)(C.avcodec_find_encoder((C.enum_AVCodecID)(id)))
 }
 

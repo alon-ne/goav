@@ -3,9 +3,15 @@
 
 package avcodec
 
+/*
+#cgo pkg-config: libavcodec
+#include <libavcodec/avcodec.h>
+*/
+import "C"
+
 import (
-	"unsafe"
 	"github.com/giorgisio/goav/avutil"
+	"unsafe"
 )
 
 func (ctxt *Context) ActiveThreadType() int {
@@ -128,6 +134,10 @@ func (ctxt *Context) Flags() int {
 	return int(ctxt.flags)
 }
 
+func (ctxt *Context) SetFlags(flags int) {
+	ctxt.flags = C.int(flags)
+}
+
 func (ctxt *Context) Flags2() int {
 	return int(ctxt.flags2)
 }
@@ -168,6 +178,10 @@ func (ctxt *Context) GopSize() int {
 	return int(ctxt.gop_size)
 }
 
+func (ctxt *Context) SetGopSize(gopSize int) {
+	ctxt.gop_size = C.int(gopSize)
+}
+
 func (ctxt *Context) HasBFrames() int {
 	return int(ctxt.has_b_frames)
 }
@@ -178,6 +192,10 @@ func (ctxt *Context) HeaderBits() int {
 
 func (ctxt *Context) Height() int {
 	return int(ctxt.height)
+}
+
+func (ctxt *Context) SetHeight(height int) {
+	ctxt.height = C.int(height)
 }
 
 func (ctxt *Context) ICount() int {
@@ -464,6 +482,14 @@ func (ctxt *Context) ThreadCount() int {
 	return int(ctxt.thread_count)
 }
 
+func (ctxt *Context) SetThreadCount(threadCount int) {
+	ctxt.thread_count = C.int(threadCount)
+}
+
+func (ctxt *Context) SetBitRate(bitRate int64) {
+	ctxt.bit_rate = C.int64_t(bitRate)
+}
+
 func (ctxt *Context) ThreadSafeCallbacks() int {
 	return int(ctxt.thread_safe_callbacks)
 }
@@ -482,6 +508,10 @@ func (ctxt *Context) Trellis() int {
 
 func (ctxt *Context) Width() int {
 	return int(ctxt.width)
+}
+
+func (ctxt *Context) SetWidth(width int) {
+	ctxt.width = C.int(width)
 }
 
 func (ctxt *Context) WorkaroundBugs() int {
@@ -532,6 +562,10 @@ func (ctxt *Context) PixFmt() PixelFormat {
 	return (PixelFormat)(ctxt.pix_fmt)
 }
 
+func (ctxt *Context) SetPixFmt(pixFmt PixelFormat) {
+	ctxt.pix_fmt = C.enum_AVPixelFormat(pixFmt)
+}
+
 func (ctxt *Context) RequestSampleFmt() AvSampleFormat {
 	return (AvSampleFormat)(ctxt.request_sample_fmt)
 }
@@ -552,6 +586,6 @@ func (ctxt *Context) SkipLoopFilter() AvDiscard {
 	return (AvDiscard)(ctxt.skip_loop_filter)
 }
 
-func (ctxt *Context) TimeBase() *avutil.Rational {
-	return (*avutil.Rational)(unsafe.Pointer(&ctxt.time_base))
+func (ctxt *Context) SetTimeBase(timeBase avutil.Rational) {
+	ctxt.time_base = *((*C.struct_AVRational)(unsafe.Pointer(&timeBase)))
 }

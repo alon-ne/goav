@@ -53,7 +53,11 @@ import (
 	"errors"
 )
 
-const maxArraySize = 1 << 31 - 1
+const (
+	maxArraySize = 1 << 31 - 1
+	AVIO_FLAG_WRITE = 2
+)
+
 
 type AvIOPacket *[maxArraySize]uint8
 
@@ -174,4 +178,8 @@ func AvIODeallocateContext(context *AvIOContext, streamIndex int) {
 	unregisterAvIOStream(streamIndex)
 	avutil.AvFree(unsafe.Pointer(context.buffer))
 	avutil.AvFree(unsafe.Pointer(context))
+}
+
+func AvIOOpen(context **AvIOContext, filename string, flags int) int {
+	return int(C.avio_open((**C.struct_AVIOContext)(unsafe.Pointer(context)), C.CString(filename), C.int(flags)))
 }

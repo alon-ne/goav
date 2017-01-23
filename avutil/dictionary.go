@@ -1,4 +1,4 @@
-package avcodec
+package avutil
 
 
 //#cgo pkg-config: libavcodec

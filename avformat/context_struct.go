@@ -13,6 +13,11 @@ static inline void PrintInputFormat(AVInputFormat* inputFormat)
 	fprintf(f, "InputFormat: name=%s\n", inputFormat->name);
 	fclose(f);
 }
+
+static inline int SetFileNameWrapper(AVFormatContext* ctxt, const char* fileName)
+{
+	return snprintf(ctxt->filename, sizeof(ctxt->filename), "%s", fileName);
+}
 */
 import "C"
 import (
@@ -59,12 +64,20 @@ func (ctxt *Context) Programs() **AvProgram {
 	return (**AvProgram)(unsafe.Pointer(ctxt.programs))
 }
 
-func (ctxt *Context) Streams() **Stream {
-	return (**Stream)(unsafe.Pointer(ctxt.streams))
+//const 	maxAraySize = 1 << 31 - 1
+
+func (ctxt *Context) Streams() []*Stream {
+	streamsArray := (*[maxArraySize](*Stream))(unsafe.Pointer(ctxt.streams))
+	streamsSlice := streamsArray[:ctxt.NbStreams()]
+	return streamsSlice
 }
 
 func (ctxt *Context) Filename() string {
 	return C.GoString((*C.char)(unsafe.Pointer(&ctxt.filename[0])))
+}
+
+func (ctxt *Context) SetFilename(fileName string) int {
+	return int(C.SetFileNameWrapper(unsafe.Pointer(ctxt), C.CString(fileName)))
 }
 
 // func (ctxt *Context) CodecWhitelist() string {
@@ -238,13 +251,14 @@ func (ctxt *Context) Iformat() *InputFormat {
 
 func (ctxt *Context) SetIformat(iformat *InputFormat) {
 	ctxt.iformat = (*C.struct_AVInputFormat)(iformat)
-	//name := C.GoString(ctxt.iformat.name)
-	//fmt.Printf("SetIformat: name=%s", name)
-	//C.PrintInputFormat(ctxt.iformat)
 }
 
 func (ctxt *Context) Oformat() *OutputFormat {
 	return (*OutputFormat)(unsafe.Pointer(ctxt.oformat))
+}
+
+func (ctxt *Context) SetOformat(oformat *OutputFormat) {
+	ctxt.oformat = (*C.struct_AVOutputFormat)(oformat)
 }
 
 // func (ctxt *Context) DumpSeparator() uint8 {

@@ -416,4 +416,7 @@ const (
 	AV_CODEC_ID_ZEROCODEC                   = int(C.AV_CODEC_ID_ZEROCODEC)
 	AV_CODEC_ID_ZLIB                        = int(C.AV_CODEC_ID_ZLIB)
 	AV_CODEC_ID_ZMBV                        = int(C.AV_CODEC_ID_ZMBV)
+
+	//Flags
+	AV_CODEC_FLAG_GLOBAL_HEADER		= (1 << 22)
 )

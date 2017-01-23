@@ -4,3 +4,8 @@
 /.DS_Store
 /CMakeLists.txt
 /example/test_avio_stream
+/example/outfile.mp4
+/example/test_decode_encode
+/example/test_rtmp_listen
+/sample.log
+/sampleOutput.mp4
