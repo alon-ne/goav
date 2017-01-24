@@ -1,7 +1,7 @@
 package main
 
 import (
-	"github.com/giorgisio/goav/avcodec"
+	"github.com/alon-ne/goav/avcodec"
 	"fmt"
 )
 

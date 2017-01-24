@@ -3,10 +3,10 @@ package main
 import (
 	"fmt"
 	"errors"
-	"github.com/giorgisio/goav/avutil"
-	"github.com/giorgisio/goav/avformat"
-	"github.com/giorgisio/goav/avlog"
-	"github.com/giorgisio/goav/avcodec"
+	"github.com/alon-ne/goav/avutil"
+	"github.com/alon-ne/goav/avformat"
+	"github.com/alon-ne/goav/avlog"
+	"github.com/alon-ne/goav/avcodec"
 )
 
 const (

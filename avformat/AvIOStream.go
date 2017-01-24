@@ -48,7 +48,7 @@ import "C"
 import (
 	"unsafe"
 	"sync"
-	"github.com/giorgisio/goav/avutil"
+	"github.com/alon-ne/goav/avutil"
 	"fmt"
 	"errors"
 )

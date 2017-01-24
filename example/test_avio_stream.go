@@ -2,10 +2,10 @@ package main
 
 import (
 	"fmt"
-	"github.com/giorgisio/goav/avformat"
+	"github.com/alon-ne/goav/avformat"
 	"os"
-	"github.com/giorgisio/goav/avutil"
-	"github.com/giorgisio/goav/avlog"
+	"github.com/alon-ne/goav/avutil"
+	"github.com/alon-ne/goav/avlog"
 )
 
 var inputFile *os.File

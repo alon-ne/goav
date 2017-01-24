@@ -10,7 +10,7 @@ package avcodec
 import "C"
 
 import (
-	"github.com/giorgisio/goav/avutil"
+	"github.com/alon-ne/goav/avutil"
 	"unsafe"
 )
 

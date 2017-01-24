@@ -8,7 +8,7 @@ package avcodec
 import "C"
 import (
 	"unsafe"
-	"github.com/giorgisio/goav/avutil"
+	"github.com/alon-ne/goav/avutil"
 )
 
 //Initialize optional fields of a packet with default values.

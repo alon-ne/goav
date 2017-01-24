@@ -1,26 +1,25 @@
 package main
 
 import (
-	"fmt"
 	"errors"
-	"os"
-	"github.com/giorgisio/goav/avlog"
-	"github.com/giorgisio/goav/avcodec"
-	"github.com/giorgisio/goav/avutil"
-	"github.com/giorgisio/goav/avformat"
+	"fmt"
+	"github.com/alon-ne/goav/avutil"
 	log "github.com/cihub/seelog"
-
+	"github.com/alon-ne/goav/avcodec"
+	"github.com/alon-ne/goav/avformat"
+	"github.com/alon-ne/goav/avlog"
+	"os"
 )
 
 const (
 	outputCodecThreadCount = 4
-	outputCodecBitRate = 300000
-	outputStreamFrameRate = 30
-	outputCodecGopSize = 12
-	outputStreamPixFmt = avcodec.AV_PIX_FMT_YUV420P
-	outputFrameAlignment = 32
-
+	outputCodecBitRate     = 300000
+	outputStreamFrameRate  = 30
+	outputCodecGopSize     = 12
+	outputStreamPixFmt     = avcodec.AV_PIX_FMT_YUV420P
+	outputFrameAlignment   = 32
 )
+
 func CreateInputCodecContext(codecId avcodec.CodecId) (*avcodec.Context, error) {
 	fmt.Printf("Calling AvcodecFindDecoder()\n")
 	videoCodec := avcodec.AvcodecFindDecoder(codecId)
@@ -90,13 +89,13 @@ func createOutputStream(width, height int, codecId int, outputFormatContext *avf
 
 }
 
-func OpenVideo(outputStream *avformat.Stream, outputCodecContext *avcodec.Context) (error) {
+func OpenVideo(outputStream *avformat.Stream, outputCodecContext *avcodec.Context) error {
 	var opts *avutil.Dictionary
-	avutil.AvDictSet(&opts, "crf", "20", 0);
-	avutil.AvDictSet(&opts, "preset", "veryfast", 0);
-	avutil.AvDictSet(&opts, "profile", "main", 0);
-	avutil.AvDictSet(&opts, "level", "31", 0);
-	avutil.AvDictSet(&opts, "x264opts", "keyint=30:bframes=2:min-keyint=30:ref=3:b-pyramid=0:b-adapt=0:no-scenecut", 0);
+	avutil.AvDictSet(&opts, "crf", "20", 0)
+	avutil.AvDictSet(&opts, "preset", "veryfast", 0)
+	avutil.AvDictSet(&opts, "profile", "main", 0)
+	avutil.AvDictSet(&opts, "level", "31", 0)
+	avutil.AvDictSet(&opts, "x264opts", "keyint=30:bframes=2:min-keyint=30:ref=3:b-pyramid=0:b-adapt=0:no-scenecut", 0)
 
 	log.Debugf("<3>")
 
@@ -115,7 +114,8 @@ func OpenVideo(outputStream *avformat.Stream, outputCodecContext *avcodec.Contex
 	return nil
 }
 
-const 	maxArraySize = 1 << 31 - 1
+const maxArraySize = 1<<31 - 1
+
 type maxArray *[maxArraySize]uint8
 
 func decodeFrame(data []byte, inputCodecContext *avcodec.Context) (*avutil.Frame, *avutil.Error) {
@@ -165,8 +165,8 @@ func encodeFrame(outputCodecContext *avcodec.Context, frame *avutil.Frame) (*avc
 	//Alon: Got this timestamp trick from ffmpeg muxing.c example
 	presentationTimeStamp := frame.Pts()
 	decompressionTimeStamp := frame.Pts()
-	encodedPacket.SetPts(presentationTimeStamp);
-	encodedPacket.SetDts(decompressionTimeStamp);
+	encodedPacket.SetPts(presentationTimeStamp)
+	encodedPacket.SetDts(decompressionTimeStamp)
 	return &encodedPacket, nil
 }
 
@@ -181,7 +181,7 @@ func main() {
 	outputFormatName := "mp4"
 
 	avlog.AvlogStartLoggingToFile("/tmp/sample.log")
-	avlog.AvlogSetLevel(avlog.AV_LOG_DEBUG);
+	avlog.AvlogSetLevel(avlog.AV_LOG_DEBUG)
 	inputCodecId := avcodec.CodecId(avcodec.AV_CODEC_ID_H264)
 
 	inputCodecContext, error := CreateInputCodecContext(inputCodecId)
@@ -226,7 +226,7 @@ func main() {
 	log.Debugf("Dumping output format")
 	outputFormatContext.AvDumpFormat(0, outputFileName, 1)
 	haveFile := ((outputFormatContext.Flags() & avformat.AVFMT_NOFILE) == 0)
-	if (haveFile) {
+	if haveFile {
 		var outputAvioContext *avformat.AvIOContext
 		if errnum := avformat.AvIOOpen(&outputAvioContext, outputFileName, avformat.AVIO_FLAG_WRITE); errnum < 0 {
 			log.Errorf("Failed to open output file '%s': %v", outputFileName, avutil.Error{errnum})
@@ -237,9 +237,9 @@ func main() {
 
 	var opts *avformat.Dictionary
 	/*
-	av_dict_set(&opts, "use_template", "1", 0);
-	av_dict_set(&opts, "init_seg_name", "init-file-stream$RepresentationID$.mp4",0);
-	av_dict_set(&opts, "media_seg_name", "chunk-file-stream$RepresentationID$-$Number%05d$.m4s",0)
+		av_dict_set(&opts, "use_template", "1", 0);
+		av_dict_set(&opts, "init_seg_name", "init-file-stream$RepresentationID$.mp4",0);
+		av_dict_set(&opts, "media_seg_name", "chunk-file-stream$RepresentationID$-$Number%05d$.m4s",0)
 	*/
 	if errnum := outputFormatContext.AvformatWriteHeader(&opts); errnum < 0 {
 		log.Errorf("Failed to write output file header: %v", avutil.Error{errnum})
@@ -293,9 +293,9 @@ func main() {
 		encodedPacket.SetDts(timestamp)
 
 		/*
-		inputTimeBase := (*inputFormatCotext.Streams()).TimeBase()
-		outputTimeBase := (*outputFormatContext.Streams()).TimeBase()
-		encodedPacket.AvPacketRescaleTs(inputTimeBase, outputTimeBase)
+			inputTimeBase := (*inputFormatCotext.Streams()).TimeBase()
+			outputTimeBase := (*outputFormatContext.Streams()).TimeBase()
+			encodedPacket.AvPacketRescaleTs(inputTimeBase, outputTimeBase)
 		*/
 
 		log.Debugf("Calling AvInterleavedWriteFrame(), writing frame of %d bytes", encodedPacket.Size())
