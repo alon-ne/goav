@@ -1,4 +1,4 @@
-package temp
+package main
 
 import (
 	"fmt"
@@ -91,12 +91,12 @@ func createOutputStream(width, height int, codecId int, outputFormatContext *avf
 }
 
 func OpenVideo(outputStream *avformat.Stream, outputCodecContext *avcodec.Context) (error) {
-	var opts *avcodec.Dictionary
-	avcodec.AvDictSet(&opts, "crf", "20", 0);
-	avcodec.AvDictSet(&opts, "preset", "veryfast", 0);
-	avcodec.AvDictSet(&opts, "profile", "main", 0);
-	avcodec.AvDictSet(&opts, "level", "31", 0);
-	avcodec.AvDictSet(&opts, "x264opts", "keyint=30:bframes=2:min-keyint=30:ref=3:b-pyramid=0:b-adapt=0:no-scenecut", 0);
+	var opts *avutil.Dictionary
+	avutil.AvDictSet(&opts, "crf", "20", 0);
+	avutil.AvDictSet(&opts, "preset", "veryfast", 0);
+	avutil.AvDictSet(&opts, "profile", "main", 0);
+	avutil.AvDictSet(&opts, "level", "31", 0);
+	avutil.AvDictSet(&opts, "x264opts", "keyint=30:bframes=2:min-keyint=30:ref=3:b-pyramid=0:b-adapt=0:no-scenecut", 0);
 
 	log.Debugf("<3>")
 
@@ -180,7 +180,7 @@ func main() {
 	outputFileName := os.Args[2]
 	outputFormatName := "mp4"
 
-	avlog.AvlogStartLoggingToFile("sample.log")
+	avlog.AvlogStartLoggingToFile("/tmp/sample.log")
 	avlog.AvlogSetLevel(avlog.AV_LOG_DEBUG);
 	inputCodecId := avcodec.CodecId(avcodec.AV_CODEC_ID_H264)
 

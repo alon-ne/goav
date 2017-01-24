@@ -17,6 +17,7 @@ package avcodec
 import "C"
 import (
 	"unsafe"
+	"github.com/giorgisio/goav/avutil"
 )
 
 type (
@@ -26,8 +27,6 @@ type (
 	Descriptor                    C.struct_AVCodecDescriptor
 	Parser                        C.struct_AVCodecParser
 	ParserContext                 C.struct_AVCodecParserContext
-	Dictionary                    C.struct_AVDictionary
-	DictionaryEntry               C.struct_AVDictionaryEntry
 	Frame                         C.struct_AVFrame
 	MediaType                     C.enum_AVMediaType
 	Packet                        C.struct_AVPacket
@@ -137,12 +136,12 @@ func AvsubtitleFree(s *AvSubtitle) {
 }
 
 //Pack a dictionary for use in side_data.
-func AvPacketPackDictionary(d *Dictionary, s *int) *uint8 {
+func AvPacketPackDictionary(d *avutil.Dictionary, s *int) *uint8 {
 	return (*uint8)(C.av_packet_pack_dictionary((*C.struct_AVDictionary)(d), (*C.int)(unsafe.Pointer(s))))
 }
 
 //Unpack a dictionary from side_data.
-func AvPacketUnpackDictionary(d *uint8, s int, dt **Dictionary) int {
+func AvPacketUnpackDictionary(d *uint8, s int, dt **avutil.Dictionary) int {
 	return int(C.av_packet_unpack_dictionary((*C.uint8_t)(d), C.int(s), (**C.struct_AVDictionary)(unsafe.Pointer(dt))))
 }
 

@@ -67,7 +67,7 @@ func (ctxt *Context) AvcodecCopyContext(ctxt2 *Context) int {
 }
 
 //Initialize the Context to use the given Codec
-func (ctxt *Context) AvcodecOpen2(c *Codec, d **Dictionary) int {
+func (ctxt *Context) AvcodecOpen2(c *Codec, d **avutil.Dictionary) int {
 	return int(C.avcodec_open2((*C.struct_AVCodecContext)(ctxt), (*C.struct_AVCodec)(c), (**C.struct_AVDictionary)(unsafe.Pointer(d))))
 }
 
