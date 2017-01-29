@@ -180,7 +180,7 @@ func main() {
 	outputFileName := os.Args[2]
 	outputFormatName := "mp4"
 
-	avlog.AvlogStartLoggingToFile("/tmp/sample.log")
+	avlog.AvlogStartLoggingToFile("/tmp/test_decode_encode.log")
 	avlog.AvlogSetLevel(avlog.AV_LOG_DEBUG)
 	inputCodecId := avcodec.CodecId(avcodec.AV_CODEC_ID_H264)
 

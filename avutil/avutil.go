@@ -9,6 +9,8 @@ package avutil
 
 //#cgo pkg-config: libavutil
 //#include <libavutil/avutil.h>
+//#include <libavutil/channel_layout.h>
+//#include <libavutil/samplefmt.h>
 //#include <stdlib.h>
 import "C"
 import (
@@ -27,6 +29,19 @@ type (
 )
 
 const errorStringSize = 1024
+
+const (
+	AVMEDIA_TYPE_UNKNOWN = -1
+	AVMEDIA_TYPE_VIDEO = 0
+	AVMEDIA_TYPE_AUDIO = 1
+	AVMEDIA_TYPE_DATA = 2
+	AVMEDIA_TYPE_SUBTITLE = 3
+	AVMEDIA_TYPE_ATTACHMENT = 4
+	AVMEDIA_TYPE_NB = 5
+
+	AV_CH_LAYOUT_STEREO = uint64(C.AV_CH_LAYOUT_STEREO)
+	AV_SAMPLE_FMT_S16 = int(C.AV_SAMPLE_FMT_S16)
+)
 
 //Return the LIBAvUTIL_VERSION_INT constant.
 func AvutilVersion() uint {

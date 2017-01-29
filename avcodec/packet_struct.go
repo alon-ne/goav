@@ -35,6 +35,10 @@ func (p *Packet) StreamIndex() int {
 	return int(p.stream_index)
 }
 
+func (p *Packet) SetStreamIndex(streamIndex int) {
+	p.stream_index = C.int(streamIndex)
+}
+
 func (p *Packet) ConvergenceDuration() int64 {
 	return int64(p.convergence_duration)
 }

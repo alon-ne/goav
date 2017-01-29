@@ -66,6 +66,19 @@ func (ctxt *Context) Channels() int {
 	return int(ctxt.channels)
 }
 
+func (ctxt *Context) SetChannels(channels int) {
+	ctxt.channels = C.int(channels)
+}
+
+func (ctxt *Context) ChannelLayout() uint64 {
+	return uint64(ctxt.channel_layout)
+}
+
+func (ctxt *Context) SetChannelLayout(channelLayout uint64) {
+	ctxt.channel_layout = C.uint64_t(channelLayout)
+}
+
+
 func (ctxt *Context) Chromaoffset() int {
 	return int(ctxt.chromaoffset)
 }
@@ -418,6 +431,10 @@ func (ctxt *Context) SampleRate() int {
 	return int(ctxt.sample_rate)
 }
 
+func (ctxt *Context) SetSampleRate(sampleRate int) {
+	ctxt.sample_rate = C.int(sampleRate)
+}
+
 func (ctxt *Context) ScenechangeThreshold() int {
 	return int(ctxt.scenechange_threshold)
 }
@@ -574,6 +591,9 @@ func (ctxt *Context) SampleFmt() AvSampleFormat {
 	return (AvSampleFormat)(ctxt.sample_fmt)
 }
 
+func (ctxt *Context) SetSampleFmt(sampleFormat AvSampleFormat) {
+	ctxt.sample_fmt = C.enum_AVSampleFormat(sampleFormat)
+}
 func (ctxt *Context) SkipFrame() AvDiscard {
 	return (AvDiscard)(ctxt.skip_frame)
 }

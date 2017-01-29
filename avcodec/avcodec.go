@@ -57,6 +57,9 @@ type (
 	AvSampleFormat                C.enum_AVSampleFormat
 )
 
+const (
+	AV_CODEC_CAP_VARIABLE_FRAME_SIZE = int(C.enum_AV_CODEC_CAP_VARIABLE_FRAME_SIZE)
+)
 func (c *Codec) AvCodecGetMaxLowres() int {
 	return int(C.av_codec_get_max_lowres((*C.struct_AVCodec)(c)))
 }
