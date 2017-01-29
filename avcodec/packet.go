@@ -37,10 +37,11 @@ func (p *Packet) AvPacketFromData(d *uint8, s int) int {
 
 }
 
-func (p *Packet) AvDupPacket() int {
+/*func (p *Packet) AvDupPacket() int {
 	return int(C.av_dup_packet((*C.struct_AVPacket)(p)))
 
 }
+*/
 
 //Copy packet, including contents.
 func (p *Packet) AvCopyPacket(r *Packet) int {
@@ -55,10 +56,10 @@ func (p *Packet) AvCopyPacketSideData(r *Packet) int {
 }
 
 //Free a packet.
-func (p *Packet) AvFreePacket() {
-	C.av_free_packet((*C.struct_AVPacket)(p))
-
-}
+//func (p *Packet) AvFreePacket() {
+//	C.av_free_packet((*C.struct_AVPacket)(p))
+//
+//}
 
 //Allocate new information of a packet.
 func (p *Packet) AvPacketNewSideData(t AvPacketSideDataType, s int) *uint8 {

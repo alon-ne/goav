@@ -10,3 +10,5 @@
 /sample.log
 /sampleOutput.mp4
 /.directory
+/.directory.*
+/.idea.*/
